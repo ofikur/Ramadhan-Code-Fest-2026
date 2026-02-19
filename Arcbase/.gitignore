@@ -1,0 +1,43 @@
+# Dependencies
+node_modules/
+
+# Environment variables
+.env
+
+# Hardhat
+cache/
+artifacts/
+
+# Typechain
+typechain-types/
+
+# Coverage
+coverage/
+coverage.json
+
+# Internal / Debug Scripts
+debug-*.js
+test-*.js
+check-impl.js
+
+# Build Artifacts
+frontend/bundle.min.js
+frontend/libs/appkit.bundle.js
+
+# Other generated files
+typechain/
+hardhat/
+gasReporterOutput.json
+
+# Misc
+.DS_Store
+Thumbs.db
+package-lock.json
+
+# Frontend Config (Optional: Uncomment if you want to keep your keys secret)
+# frontend/config.js
+
+# Log files
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*

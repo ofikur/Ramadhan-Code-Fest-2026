@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ArcBase | Protokol Launchpad NFT</title>
+    <link rel="stylesheet" href="style.css">
+
+    <!-- Meta Tags -->
+    <meta name="description"
+        content="Platform peluncuran NFT open-source berbasis Base Network. Aman, modular, dan efisien gas.">
+</head>
+
+<body>
+    <header class="app-header">
+        <div class="logo">ArcBase</div>
+        <div class="header-actions">
+            <!-- Selector Moved to Factory Section -->
+            <span id="network-status" class="badge">Menunggu Koneksi...</span>
+            <button id="connect-wallet" class="btn btn-primary">Hubungkan Dompet</button>
+        </div>
+    </header>
+
+    <main class="app-container">
+        <!-- Section: Hero -->
+        <section class="hero-section">
+            <h1>Launchpad NFT Terdesentralisasi</h1>
+            <p>Deploy koleksi NFT modular, upgradeable, dan hemat gas di Base Network dalam hitungan detik.</p>
+        </section>
+
+        <!-- Section: Load Existing -->
+        <section class="card" style="margin-bottom: 2rem; border-color: var(--primary);">
+            <h2 style="font-size: 1.2rem; color: var(--primary);">📂 Load Koleksi Lama</h2>
+            <div class="form-group-row" style="align-items: flex-end;">
+                <div class="form-group" style="flex: 1;">
+                    <label>Contract Address</label>
+                    <input type="text" id="load-address" placeholder="0x..." style="margin-bottom:0;">
+                </div>
+                <button id="load-btn" class="btn btn-secondary" style="white-space: nowrap;">Load Data</button>
+            </div>
+            <p style="font-size: 0.8rem; color: var(--text-secondary); margin-top: 0.5rem;">
+                *Masukkan address contract yang sudah dideploy untuk minting atau manage.
+            </p>
+        </section>
+
+        <!-- Section: Deployment Factory -->
+        <section class="card factory-section">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                <h2 style="margin: 0;">Deploy Koleksi Baru</h2>
+                <select id="network-select" class="network-select"
+                    style="padding: 0.5rem; font-size: 0.9rem; width: auto;">
+                    <option value="84532">Base Sepolia</option>
+                    <option value="8453">Base Mainnet</option>
+                </select>
+            </div>
+            <form id="deploy-form">
+                <div class="form-group">
+                    <label for="col-name">Nama Koleksi</label>
+                    <input type="text" id="col-name" placeholder="Contoh: Bored ArcBase Yacht Club" required>
+                </div>
+                <div class="form-group-row">
+                    <div class="form-group">
+                        <label for="col-symbol">Simbol</label>
+                        <input type="text" id="col-symbol" placeholder="BAYC" maxlength="10" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="col-supply">Max Supply</label>
+                        <input type="number" id="col-supply" placeholder="10000" min="1" required>
+                    </div>
+                </div>
+                <div class="form-group-row">
+                    <div class="form-group">
+                        <label for="col-price">Harga Mint (ETH)</label>
+                        <input type="number" id="col-price" placeholder="0.001" step="0.000001" min="0" required>
+                    </div>
+                    <div class="form-group-row">
+                        <div class="form-group">
+                            <label for="col-royalty">Royalti (%)</label>
+                            <input type="number" id="col-royalty" placeholder="5" min="0" max="10" step="0.1" required>
+                        </div>
+                    </div>
+
+                    <!-- Simplified Upload UI -->
+                    <div class="form-group">
+                        <label>Cover Image & Metadata</label>
+                        <div
+                            style="background: rgba(255,255,255,0.05); padding: 1rem; border-radius: var(--radius); border: 1px dashed var(--border-color);">
+                            <!-- Option A: File Upload -->
+                            <div style="margin-bottom: 1rem;">
+                                <label style="font-size: 0.8rem; margin-bottom: 0.5rem; display: block;">Option A:
+                                    Upload Gambar (Auto IPFS)</label>
+                                <input type="file" id="local-image-input" accept="image/*">
+                                <p class="text-secondary" style="font-size: 0.75rem; margin-top: 0.3rem;">
+                                    Upload gambar di sini. Sistem otomatis upload ke IPFS & generate metadata. Gak perlu
+                                    ribet.
+                                </p>
+                            </div>
+
+                            <div
+                                style="text-align: center; margin: 0.5rem 0; font-size: 0.8rem; color: var(--text-secondary);">
+                                - ATAU -</div>
+
+                            <!-- Option B: Manual URI -->
+                            <div style="margin-top: 1rem;">
+                                <label style="font-size: 0.8rem; margin-bottom: 0.5rem; display: block;">Option B: Punya
+                                    Link IPFS Sendiri?</label>
+                                <input type="text" id="col-uri" placeholder="ipfs://QmYourHash/">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Preview Area -->
+                    <div class="form-group">
+                        <div class="image-preview-container" id="image-preview-box" style="margin-top: 0;">
+                            <div class="image-preview-placeholder">
+                                <span>🖼️ Preview Gambar</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- End Simplified UI -->
+
+                    <div class="preview-box">
+                        <span>Estimasi Alamat: </span>
+                        <code id="address-preview">...</code>
+                        <button type="button" id="refresh-preview" class="btn btn-small">↻ Update Preview</button>
+                    </div>
+
+                    <button type="submit" id="deploy-btn" class="btn btn-action" disabled>Deploy Koleksi</button>
+            </form>
+        </section>
+
+        <!-- Section: Collection Interaction -->
+        <section class="card collection-section hidden" id="collection-ui">
+            <div class="collection-header">
+                <div>
+                    <h2 id="view-name">Nama Koleksi</h2>
+                    <span id="view-symbol" class="badge badge-outline">SYMB</span>
+                </div>
+                <button id="share-btn" class="btn btn-small btn-secondary" style="margin-left: auto;">🔗 Share
+                    Link</button>
+            </div>
+
+            <div style="text-align: center; margin-bottom: 2rem;">
+                <img id="view-cover" src="" alt="Collection Cover"
+                    style="max-width: 300px; width: 100%; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.3); display: none;">
+                <div id="view-cover-loader" style="font-size: 0.9rem; color: var(--text-secondary); display: none;">
+                    🔄 Memuat Gambar Koleksi...
+                </div>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <label>Terjual</label>
+                    <span id="stat-minted">0 / 0</span>
+                </div>
+                <div class="stat-item">
+                    <label>Harga</label>
+                    <span id="stat-price">0 ETH</span>
+                </div>
+                <div class="stat-item">
+                    <label>Status Metadata</label>
+                    <span id="stat-freeze">Aktif</span>
+                </div>
+            </div>
+
+            <div class="mint-actions">
+                <div class="mint-input-group">
+                    <input type="number" id="mint-qty" value="1" min="1" max="10">
+                    <button id="mint-btn" class="btn btn-primary">Mint NFT</button>
+                </div>
+            </div>
+
+            <div class="owner-actions hidden" id="owner-panel">
+                <h3>Panel Pemilik</h3>
+                <p class="warning-text">⚠️ Tindakan ini permanen.</p>
+                <button id="freeze-btn" class="btn btn-danger">Bekukan & Kunci Upgrade</button>
+            </div>
+        </section>
+
+        <!-- Toast Notifications -->
+        <div id="toast-container"></div>
+    </main>
+
+    <!-- Minified Bundle (Production) -->
+    <script type="module" src="bundle.min.js"></script>
+</body>
+
+</html>
