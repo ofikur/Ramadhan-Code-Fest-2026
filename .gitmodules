@@ -70,3 +70,6 @@
 [submodule "bot-nganggur"]
 	path = bot-nganggur
 	url = https://github.com/fdvky1/bot-nganggur.git
+[submodule "MamboSU"]
+	path = MamboSU
+	url = https://github.com/RapliVx/KernelSU.git
